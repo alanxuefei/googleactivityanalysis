@@ -4,56 +4,128 @@ import java.io.*;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class processdata {
 	
+	 static Calendar begin = Calendar.getInstance();
+	 static Calendar end = Calendar.getInstance();
+	
 	 public static void main(String[] args) throws IOException, ParseException {
-	        
+		 
+ 
+		  //   getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-07-29.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-07-29.txt");
 
-			BufferedReader in = null;
-			File file = new File("C:/Users/Alan/Desktop/dataprocessing/ga2015-07-28.txt");
+		   //   SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-07-29.txt");
+		     toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Running-Onhand_ga2015-07-29.txt","Running");
+	
+	 }
+	 
+	 public static  void getGA(String Input, String Output) throws IOException, ParseException {
+		 
+	
+			
+			
+			File file = new File(Output);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
 			
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			
-			 
-			in = new BufferedReader(new FileReader("C:/Users/Alan/Desktop/dataprocessing/2015-07-28.txt"));
-		 
-			String line;
-		
+			BufferedReader in = new BufferedReader(new FileReader(Input));
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile()));		 
+			String line;		
 							
 			while((line = in.readLine()) != null){
 				String[] strs = line.split(" ");	
 					
-				if (strs[2].equals("GA")){
-					 
+				if (strs[2].equals("GA")){					 
 					bw.append(line+'\n');
-					//System.out.println(line);
-				
+					//System.out.println(line);				
 				}
 			}
 			
 			bw.close();		
 			in.close();
 			
+	 
+	 }
+	 
+	 
+	 public  static  void SplitGA(String Path,String filename) throws IOException, ParseException {
+		 
+		    BufferedReader in = new BufferedReader(new FileReader(Path+filename));
+			String line,currentactivity,tempactivity = null;
+			FileWriter fw ;
+ 
+			BufferedWriter bw = null;		
+			
+			boolean firstline=true;
+			while((line = in.readLine()) != null){
+				
+				String[] strs0 = line.split(" ");				 
+				currentactivity=strs0[1];  				 
+				 
+				
+				if (firstline){
+					firstline=false;
+					tempactivity=currentactivity;
+					File file = new File(Path+tempactivity+"_"+filename);
+					if (!file.exists()) {
+						file.createNewFile();
+					}
+					bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile(),true));
+					bw.append(line+'\n');
+					
+					System.out.println(line);
+	
+					
+				}else{
+					if (tempactivity.equals(currentactivity)) {
+						bw.append(line+'\n');
+						
+					}
+					else{
+						bw.close();
+						tempactivity=currentactivity;
+						File file = new File(Path+tempactivity+"_"+filename);
+						if (!file.exists()) {
+							file.createNewFile();
+						}
+						bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile(),true));
+						bw.append(line+'\n');						
+					}
+					
+					
+				}
+			
+				
+			}	
+	 
+	 }
+	 
+	 
+	 public static void toprocessData(String Path,String filename,String expectedactivity) throws IOException, ParseException {
+		 
+				 
+		   
+ 
+			GetBeginandEnd(Path,filename);
 			String datatime = null,  currentactivity,frameactivity = "";
 			Float currentintetval=(float) 0, tempinterval=(float) 0;
- 
+
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
 			Calendar start = Calendar.getInstance();
 			Calendar currentline = Calendar.getInstance();
 			Calendar nextline = Calendar.getInstance();
-			 
-            float right=0,wrong=0;
-			 
-		 
-			BufferedReader in1 = new BufferedReader(new FileReader("C:/Users/Alan/Desktop/dataprocessing/ga2015-07-28.txt"));			
 			String line1;
-			boolean firstline=true;
+            float right=0,wrong=0;
+            boolean firstline=true;
+		 
+
+			
+			BufferedReader in1 = new BufferedReader(new FileReader(Path+filename));		
+			 
 			while((line1 = in1.readLine()) != null){
 				
 
@@ -63,8 +135,10 @@ public class processdata {
 				currentactivity=strs0[strs0.length-2];  
 				String last=strs0[strs0.length-1];
 				currentintetval = Float.valueOf(last.substring(0, last.length()-1));
-				if (!currentactivity.equals("foot")){
-				 // System.out.println(datatime+currentactivity+currentintetval);
+				currentline.setTime(simpleDateFormat.parse(datatime));
+				 if (!currentactivity.equals("foot")&&(currentline.compareTo(end)<0)&&(currentline.compareTo(begin)>0)){
+					 
+					 System.out.println(line1);
 				 
 					if (firstline){
 						start.setTime(simpleDateFormat.parse(datatime));
@@ -74,7 +148,7 @@ public class processdata {
 						firstline=false;			 
 					}
 					else{					
-						currentline.setTime(simpleDateFormat.parse(datatime));
+						
 						if (currentline.compareTo(nextline)<0){
 							if(currentintetval>tempinterval){
 								frameactivity=currentactivity;		
@@ -83,8 +157,8 @@ public class processdata {
 						 
 						}
 						else{
-							System.out.println(nextline.getTime()+" "+frameactivity);
-							if (frameactivity.equals("Walking")){
+							
+							if (frameactivity.equals(expectedactivity)){
 								right++;
 							}
 							else{
@@ -96,12 +170,40 @@ public class processdata {
 							 
 						}																	
 					}
-				}
+				 
 			}	
+		
+			
+			
+			}
+			System.out.println(right/(right+wrong));					
 			in1.close();
-			
-			System.out.println(right/(right+wrong));		
-			
+		 
+	 }
+	 
+	 public  static  void GetBeginandEnd(String Path,String filename) throws IOException, ParseException {
+		BufferedReader in1 = new BufferedReader(new FileReader(Path+filename));			
+		String line1;
+		boolean firstline=true;
+		String datatime = null;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+		 
+		while((line1 = in1.readLine()) != null){
+			String[] strs0 = line1.split(" ");	
+			datatime=strs0[0];
+			if (firstline){
+				begin.setTime(simpleDateFormat.parse(datatime)); 
+				begin.add(Calendar.SECOND, 15);
+				firstline=false;						
+			}else{
+				end.setTime(simpleDateFormat.parse(datatime)); 
+			}
+
+		}
+		end.add(Calendar.SECOND, -15);
+		in1.close();
+		System.out.println("begin:   "+begin.getTime()+"  end:   "+end.getTime());
+		
 	 }
 
 }
