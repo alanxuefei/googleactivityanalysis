@@ -15,10 +15,10 @@ public class processdata {
 	 public static void main(String[] args) throws IOException, ParseException {
 		 
  
-		  //   getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-07-29.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-07-29.txt");
+		    // getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-07-31.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-07-31.txt");
 
-		   //   SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-07-29.txt");
-		     toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Running-Onhand_ga2015-07-29.txt","Running");
+		   //SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-07-31.txt");
+		      toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Walking-Onpocket_ga2015-07-31.txt","Walking");
 	
 	 }
 	 
@@ -77,21 +77,23 @@ public class processdata {
 					bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile(),true));
 					bw.append(line+'\n');
 					
-					System.out.println(line);
+					 
 	
 					
 				}else{
 					if (tempactivity.equals(currentactivity)) {
 						bw.append(line+'\n');
-						
+						//System.out.println(bw.toString()+ line);
 					}
 					else{
-						bw.close();
+						 
 						tempactivity=currentactivity;
+						 
 						File file = new File(Path+tempactivity+"_"+filename);
 						if (!file.exists()) {
 							file.createNewFile();
 						}
+						bw.close();
 						bw = new BufferedWriter(new FileWriter(file.getAbsoluteFile(),true));
 						bw.append(line+'\n');						
 					}
@@ -99,9 +101,9 @@ public class processdata {
 					
 				}
 			
-				
+			
 			}	
-	 
+			bw.close();
 	 }
 	 
 	 
@@ -157,7 +159,7 @@ public class processdata {
 						 
 						}
 						else{
-							
+							System.out.println(frameactivity);
 							if (frameactivity.equals(expectedactivity)){
 								right++;
 							}
