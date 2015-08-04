@@ -15,10 +15,10 @@ public class processdata {
 	 public static void main(String[] args) throws IOException, ParseException {
 		 
  
-		    // getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-07-31.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-07-31.txt");
+		      getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-08-03.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-08-03.txt");
 
-		   //SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-07-31.txt");
-		      toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Walking-Onpocket_ga2015-07-31.txt","Walking");
+		    SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-08-03.txt");
+		     toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Walking-Onbag_ga2015-08-03.txt","Walking");
 	
 	 }
 	 
@@ -145,7 +145,7 @@ public class processdata {
 					if (firstline){
 						start.setTime(simpleDateFormat.parse(datatime));
 						nextline.setTime(start.getTime());
-						nextline.add(Calendar.SECOND, 5);
+						nextline.add(Calendar.SECOND, 40);
 						tempinterval=currentintetval;
 						firstline=false;			 
 					}
