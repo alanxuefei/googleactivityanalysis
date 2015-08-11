@@ -14,11 +14,23 @@ public class processdata {
 	
 	 public static void main(String[] args) throws IOException, ParseException {
 		 
- 
-		      getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-08-03.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-08-03.txt");
+		 ArrayList<String> list = new ArrayList<String>();
+		 list.add("A");
+		 list.add("B");
+		 list.add("C");
+		 list.add("D");
+		 list.add("E");
+		 list.add("F");
+		 list.add("G");
+		 list.add("H");
+		 System.out.println(list.toString());
+		 String i =list.toString();
+		 String[] i1=i.split;
+		 
+		     // getGA("C:/Users/Alan/Desktop/dataprocessing/data/2015-08-03.txt","C:/Users/Alan/Desktop/dataprocessing/data/ga2015-08-03.txt");
 
-		    SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-08-03.txt");
-		     toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Walking-Onbag_ga2015-08-03.txt","Walking");
+		    //SplitGA("C:/Users/Alan/Desktop/dataprocessing/data/","ga2015-08-03.txt");
+		     //toprocessData("C:/Users/Alan/Desktop/dataprocessing/data/","Walking-Onbag_ga2015-08-03.txt","Walking");
 	
 	 }
 	 
@@ -145,12 +157,12 @@ public class processdata {
 					if (firstline){
 						start.setTime(simpleDateFormat.parse(datatime));
 						nextline.setTime(start.getTime());
-						nextline.add(Calendar.SECOND, 40);
+						nextline.add(Calendar.SECOND, 5);
 						tempinterval=currentintetval;
 						firstline=false;			 
 					}
 					else{					
-						
+						System.out.println(frameactivity);
 						if (currentline.compareTo(nextline)<0){
 							if(currentintetval>tempinterval){
 								frameactivity=currentactivity;		
@@ -159,7 +171,7 @@ public class processdata {
 						 
 						}
 						else{
-							System.out.println(frameactivity);
+							
 							if (frameactivity.equals(expectedactivity)){
 								right++;
 							}
